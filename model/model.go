@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -51,18 +52,28 @@ func findAllUser() []User {
 	return users
 }
 
-func main() {
-	var user = User{
-		Name: "test",
-	}
+func FindUsers(c *gin.Context) {
+	//var user = User{
+	//		Name: "test",
+	//	}
 
-	insertUser(&user)
+	//insertUser(&user)
 
 	resultUsers := findAllUser()
 
-	for i := range resultUsers {
-		fmt.Printf("index: %d, ユーザーID: %d, ユーザー名: %s\n",
-			i, resultUsers[i].ID, resultUsers[i].Name)
-	}
+	//for i := range resultUsers {
+	//		fmt.Printf("index: %d, ユーザーID: %d, ユーザー名: %s\n",
+	//		i, resultUsers[i].ID, resultUsers[i].Name)
+	//	}
 
+	c.JSON(200, resultUsers)
+	return
+}
+
+func InsertUser(c *gin.Context) {
+	var user = User{}
+	user.Name = c.PostForm("name")
+	insertUser(&user)
+	c.JSON(200, "Success")
+	return
 }
