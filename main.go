@@ -1,12 +1,20 @@
 package main
 
 import (
+	"log"
 	"main/model"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	router := gin.Default()
 
 	router.GET("/", func(c *gin.Context) {
@@ -19,5 +27,5 @@ func main() {
 	//name := c.Query("name")
 	//name := c.Param("name")
 
-	router.Run(":443")
+	router.Run(":" + os.Getenv("PORT"))
 }
