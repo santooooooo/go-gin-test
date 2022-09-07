@@ -13,7 +13,7 @@ func main() {
 	port := ""
 	if env != nil {
 		//log.Fatal("Error loading .env file")
-		port = "80"
+		port = "8080"
 	} else {
 		port = os.Getenv("PORT")
 	}
