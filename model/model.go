@@ -18,6 +18,7 @@ type User struct {
 func getGormConnect() *gorm.DB {
 	err := godotenv.Load()
 	if err != nil {
+		// heroku上だとenvが取得できないことによるエラーでサーバーが停止してしまうため、heroku上のみコメントアウト
 		//log.Fatal("Error loading .env file")
 	}
 
