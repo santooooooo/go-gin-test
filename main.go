@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"main/model"
 	"os"
 
@@ -10,9 +9,13 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	env := godotenv.Load()
+	port := ""
+	if env != nil {
+		//log.Fatal("Error loading .env file")
+		port = "80"
+	} else {
+		port = os.Getenv("PORT")
 	}
 
 	router := gin.Default()
@@ -27,5 +30,5 @@ func main() {
 	//name := c.Query("name")
 	//name := c.Param("name")
 
-	router.Run(":" + os.Getenv("PORT"))
+	router.Run(":" + port)
 }
