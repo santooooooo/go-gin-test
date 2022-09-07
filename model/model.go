@@ -27,9 +27,12 @@ func getGormConnect() *gorm.DB {
 	PROTOCOL := os.Getenv("DBPROTOCOL")
 	DBNAME := os.Getenv("DBNAME")
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
+
 	db, err := gorm.Open(DBMS, CONNECT)
 
 	if err != nil {
+		fmt.Println(DBMS)
+		fmt.Println(CONNECT)
 		fmt.Println("error occurs!")
 		panic(err.Error())
 	}
