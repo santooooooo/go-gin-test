@@ -2,10 +2,13 @@ package model
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/joho/godotenv"
 )
 
 type User struct {
@@ -14,11 +17,16 @@ type User struct {
 }
 
 func getGormConnect() *gorm.DB {
-	DBMS := "mysql"
-	USER := "user"
-	PASS := "gogin"
-	PROTOCOL := "tcp(db)"
-	DBNAME := "go-gin"
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	DBMS := os.Getenv("DBMS")
+	USER := os.Getenv("DBUSER")
+	PASS := os.Getenv("DBPASS")
+	PROTOCOL := os.Getenv("DBPROTOCOL")
+	DBNAME := os.Getenv("DBNAME")
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
 	db, err := gorm.Open(DBMS, CONNECT)
 
