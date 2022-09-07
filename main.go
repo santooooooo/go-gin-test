@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"main/model"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -27,5 +26,6 @@ func main() {
 	//name := c.Query("name")
 	//name := c.Param("name")
 
-	router.Run(":" + os.Getenv("PORT"))
+	//router.Run(":" + os.Getenv("PORT"))
+	router.Run(":43853")
 }
