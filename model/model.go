@@ -47,11 +47,17 @@ func getGormConnect() *gorm.DB {
 	return db
 }
 
-func insertUser(registerUser *User) {
+func insertUser(registerUser *User) User {
 	db := getGormConnect()
 
 	db.Create(&registerUser)
 	defer db.Close()
+
+	userInfo := User{
+		ID:   registerUser.ID,
+		Name: registerUser.Name,
+	}
+	return userInfo
 }
 
 func findAllUser() []User {
@@ -84,7 +90,7 @@ func FindUsers(c *gin.Context) {
 func InsertUser(c *gin.Context) {
 	var user = User{}
 	user.Name = c.PostForm("name")
-	insertUser(&user)
-	c.JSON(200, "Success")
+	userInfo := insertUser(&user)
+	c.JSON(200, userInfo)
 	return
 }

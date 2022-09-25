@@ -23,7 +23,7 @@ func main() {
 
 	router.GET("/users", model.FindUsers)
 
-	router.POST("/users", model.InsertUser)
+	router.POST("/user", model.InsertUser)
 
 	router.Run(":" + os.Getenv("PORT"))
 }
