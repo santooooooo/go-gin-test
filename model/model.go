@@ -1,7 +1,6 @@
 package model
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -61,14 +60,13 @@ func insertUser(registerUser *User) User {
 	return userInfo
 }
 
-func findAllUser() []byte {
+func findAllUser() []User {
 	db := getGormConnect()
 	var users []User
 
 	db.Order("ID asc").Find(&users)
 	defer db.Close()
-	usersInfo, _ := json.Marshal(users)
-	return usersInfo
+	return users
 }
 
 func FindUsers(c *gin.Context) {
