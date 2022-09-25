@@ -54,16 +54,12 @@ func insertUser(registerUser *User) string {
 	db.Create(&registerUser)
 	defer db.Close()
 
-	var userInfo []User
-	userInfo = append(userInfo, User{
+	userInfo := User{
 		ID:   registerUser.ID,
 		Name: registerUser.Name,
-	})
-
-	usersInfo := map[string][]User{
-		"Users": userInfo,
 	}
-	jsonEncode, _ := json.Marshal(usersInfo)
+
+	jsonEncode, _ := json.Marshal(userInfo)
 	return string(jsonEncode)
 }
 
