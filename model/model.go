@@ -54,11 +54,12 @@ func insertUser(registerUser *User) string {
 	db.Create(&registerUser)
 	defer db.Close()
 
-	userInfo := User{
-		ID:   registerUser.ID,
-		Name: registerUser.Name,
-	}
-	jsonEncode, _ := json.Marshal(userInfo)
+	usersInfo := map[string]User{
+		"Users": User{
+			ID:   registerUser.ID,
+			Name: registerUser.Name,
+		}}
+	jsonEncode, _ := json.Marshal(usersInfo)
 	return string(jsonEncode)
 }
 
