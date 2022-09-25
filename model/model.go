@@ -48,7 +48,7 @@ func getGormConnect() *gorm.DB {
 	return db
 }
 
-func insertUser(registerUser *User) User {
+func insertUser(registerUser *User) string {
 	db := getGormConnect()
 
 	db.Create(&registerUser)
@@ -58,7 +58,8 @@ func insertUser(registerUser *User) User {
 		ID:   registerUser.ID,
 		Name: registerUser.Name,
 	}
-	return userInfo
+	jsonEncode, _ := json.Marshal(userInfo)
+	return string(jsonEncode)
 }
 
 func findAllUser() string {
