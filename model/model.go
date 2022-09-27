@@ -52,6 +52,12 @@ func getGormConnect() *gorm.DB {
 func insertUser(registerUser *User) string {
 	db := getGormConnect()
 
+	user := *registerUser
+	result := db.Where("name = ?", user.Name).First(&User{})
+	if result.RowsAffected != 0 {
+		return "このユーザーは既に存在しています"
+	}
+
 	db.Create(&registerUser)
 	defer db.Close()
 
