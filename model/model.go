@@ -12,8 +12,9 @@ import (
 )
 
 type User struct {
-	ID   int    `gorm:"primary_key;not null"`
-	Name string `gorm:"type:varchar(200);not null"`
+	ID    int    `gorm:"primary_key;not null"`
+	Name  string `gorm:"type:varchar(200);not null;unique"`
+	Point int    `gorm: "type:int;not null;"`
 }
 
 func getGormConnect() *gorm.DB {
