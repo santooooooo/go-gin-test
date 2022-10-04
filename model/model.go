@@ -62,8 +62,9 @@ func insertUser(registerUser *User) string {
 	defer db.Close()
 
 	userInfo := User{
-		ID:   registerUser.ID,
-		Name: registerUser.Name,
+		ID:    registerUser.ID,
+		Name:  registerUser.Name,
+		Point: registerUser.Point,
 	}
 
 	jsonEncode, _ := json.Marshal(userInfo)
