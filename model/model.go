@@ -49,28 +49,6 @@ func getGormConnect() *gorm.DB {
 	return db
 }
 
-func insertUser(registerUser *User) string {
-	db := getGormConnect()
-
-	user := *registerUser
-	result := db.Where("name = ?", user.Name).First(&User{})
-	if result.RowsAffected != 0 {
-		return "このユーザーは既に存在しています"
-	}
-
-	db.Create(&registerUser)
-	defer db.Close()
-
-	userInfo := User{
-		ID:    registerUser.ID,
-		Name:  registerUser.Name,
-		Point: registerUser.Point,
-	}
-
-	jsonEncode, _ := json.Marshal(userInfo)
-	return string(jsonEncode)
-}
-
 func findAllUser() string {
 	db := getGormConnect()
 	var users []User
@@ -99,10 +77,46 @@ func FindUsers(c *gin.Context) {
 	return
 }
 
+func insertUser(registerUser *User) string {
+	db := getGormConnect()
+
+	result := db.Where("name = ?", registerUser.Name).First(&User{})
+	if result.RowsAffected != 0 {
+		return "このユーザーは既に存在しています"
+	}
+
+	db.Create(&registerUser)
+	defer db.Close()
+
+	jsonEncode, _ := json.Marshal(registerUser)
+	return string(jsonEncode)
+}
+
 func InsertUser(c *gin.Context) {
 	var user = User{}
 	user.Name = c.PostForm("name")
 	userInfo := insertUser(&user)
+	c.JSON(200, userInfo)
+	return
+}
+
+func login(registerUser *User) string {
+	var user = User{}
+	db := getGormConnect()
+
+	result := db.Where("name = ?", registerUser.Name).First(&user)
+	if result.RowsAffected != 0 {
+		jsonEncode, _ := json.Marshal(user)
+		return string(jsonEncode)
+	}
+
+	return "正しいユーザー名を入力してください"
+}
+
+func Login(c *gin.Context) {
+	var user = User{}
+	user.Name = c.PostForm("name")
+	userInfo := login(&user)
 	c.JSON(200, userInfo)
 	return
 }
