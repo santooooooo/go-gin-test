@@ -94,8 +94,13 @@ func insertUser(registerUser *User) string {
 
 func InsertUser(c *gin.Context) {
 	var user = User{}
+	var existedUser string = "このユーザーは既に存在しています"
 	user.Name = c.PostForm("name")
 	userInfo := insertUser(&user)
+	if userInfo == existedUser {
+		c.JSON(403, userInfo)
+		return
+	}
 	c.JSON(200, userInfo)
 	return
 }
@@ -115,8 +120,13 @@ func login(registerUser *User) string {
 
 func Login(c *gin.Context) {
 	var user = User{}
+	var notUser string = "正しいユーザー名を入力してください"
 	user.Name = c.PostForm("name")
 	userInfo := login(&user)
+	if userInfo == notUser {
+		c.JSON(404, userInfo)
+		return
+	}
 	c.JSON(200, userInfo)
 	return
 }
