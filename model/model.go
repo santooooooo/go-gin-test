@@ -94,7 +94,7 @@ func insertUser(registerUser *User) string {
 
 func InsertUser(c *gin.Context) {
 	var user = User{}
-	var existedUser string = "このユーザーは既に存在していますよ"
+	var existedUser string = "このユーザーは既に存在しています"
 	user.Name = c.PostForm("name")
 	userInfo := insertUser(&user)
 	if userInfo == existedUser {
