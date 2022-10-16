@@ -21,11 +21,17 @@ func main() {
 		c.String(200, "Hello Gin!")
 	})
 
+	// ユーザー全体の情報の閲覧
 	router.GET("/users", model.FindUsers)
 
+	// ユーザーの登録
 	router.POST("/user", model.InsertUser)
 
+	// ユーザーのログイン
 	router.POST("/login", model.Login)
+
+	// ユーザー全体の情報の閲覧
+	router.POST("/point/increment", model.PointIncrement)
 
 	router.Run(":" + os.Getenv("PORT"))
 }

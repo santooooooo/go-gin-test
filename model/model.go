@@ -130,3 +130,34 @@ func Login(c *gin.Context) {
 	c.JSON(200, userInfo)
 	return
 }
+
+// pointの増加
+func pointIncrement(registerUser *User) string {
+	var user = User{}
+	db := getGormConnect()
+	var notUser string = "正しいユーザー名を入力してください"
+
+	result := db.Where("name = ?", registerUser.Name).First(&user)
+	if result.RowsAffected == 0 {
+		return notUser
+	}
+
+	incrementPoint := user.Point + 1
+	db.Model(&user).Update("point", incrementPoint)
+
+	jsonEncode, _ := json.Marshal(user)
+	return string(jsonEncode)
+}
+
+func PointIncrement(c *gin.Context) {
+	var user = User{}
+	var notUser string = "正しいユーザー名を入力してください"
+	user.Name = c.PostForm("name")
+	userInfo := pointIncrement(&user)
+	if userInfo == notUser {
+		c.JSON(404, userInfo)
+		return
+	}
+	c.JSON(200, userInfo)
+	return
+}
