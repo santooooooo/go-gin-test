@@ -6,9 +6,11 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/joho/godotenv"
+	"gorm.io/driver/mysql"
+	_ "gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type User struct {
@@ -31,7 +33,8 @@ func getGormConnect() *gorm.DB {
 	DBNAME := os.Getenv("DBNAME")
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
 
-	db, err := gorm.Open(DBMS, CONNECT)
+	// JawsDBの'max_user_connections'resourceの上限以下になるようにプリペアードステートメントのキャッシュを有効にする。また、エラーの時だけログを表示させる
+	db, err := gorm.Open(mysql.Open(CONNECT), &gorm.Config{PrepareStmt: true, Logger: logger.Default.LogMode(logger.Error)})
 
 	if err != nil {
 		fmt.Println(DBMS)
@@ -41,8 +44,6 @@ func getGormConnect() *gorm.DB {
 	}
 
 	db.Set("gorm:table_option", "ENGINE=InnoDB")
-	db.LogMode(true)
-	db.SingularTable(true)
 	db.AutoMigrate(&User{})
 
 	fmt.Println("db connected: ", &db)
@@ -54,7 +55,8 @@ func findAllUser() string {
 	var users []User
 
 	db.Order("ID asc").Find(&users)
-	defer db.Close()
+	db_close, _ := db.DB()
+	defer db_close.Close()
 	usersInfo, _ := json.Marshal(users)
 	return string(usersInfo)
 }
@@ -86,7 +88,8 @@ func insertUser(registerUser *User) string {
 	}
 
 	db.Create(&registerUser)
-	defer db.Close()
+	db_close, _ := db.DB()
+	defer db_close.Close()
 
 	jsonEncode, _ := json.Marshal(registerUser)
 	return string(jsonEncode)
